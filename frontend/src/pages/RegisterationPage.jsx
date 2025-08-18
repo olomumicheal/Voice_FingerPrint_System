@@ -29,11 +29,12 @@ const RegistrationPage = () => {
   const handleRegistrationComplete = (recordedVoiceData) => {
     setMessage("Voice data successfully captured. Submitting details...");
     
+    // Corrected logic: Change the key from voice_data to voice_sample
     const registrationData = {
       username,
       email,
       password,
-      voice_data: recordedVoiceData,
+      voice_sample: recordedVoiceData,
     };
     
     // Now send the combined data to the backend

@@ -14,13 +14,16 @@ const LoginPage = () => {
   const handleLogin = (voiceData) => {
     console.log("Attempting to log in with voice data:", voiceData);
     
-    // For this temporary login logic, we are sending the username to the backend
+    // Corrected logic: Send both username and voiceData to the backend
     fetch('https://voice-auth-backend.onrender.com/api/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: username }),
+      body: JSON.stringify({
+        username: username,
+        voice_sample: voiceData // Add the voice data to the request
+      }),
     })
     .then(response => {
       if (response.ok) {
