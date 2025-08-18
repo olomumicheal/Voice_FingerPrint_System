@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+ 
+# C extensions
+*.so
+ 
+# Distributions / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+ 
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+ 
+# Unit test / coverage reports
+.coverage
+.tox/
+.pytest_cache/
+htmlcov/
+ 
+# Virtual environments
+venv/
+env/
+.env
+ 
+# Databases
+*.sqlite3
+db.sqlite3
+ 
+# Django-specific files
+media/
+static/
+ 
+# Operating System specific files
+.DS_Store
+.vscode/
+ 
+# Render deployment files
+.render-build.sh
