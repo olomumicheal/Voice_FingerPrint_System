@@ -49,8 +49,8 @@ MIDDLEWARE = [
 # CORS settings for your React frontend
 # Make sure to add the correct public URL of your Vercel frontend here.
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
     "https://voice-finger-print-system.vercel.app",
 ]
 
