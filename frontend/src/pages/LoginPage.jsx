@@ -15,7 +15,7 @@ const LoginPage = () => {
     console.log("Attempting to log in with voice data:", voiceData);
     
     // Corrected logic: Send both username and voiceData to the backend
-    fetch('https://voice-auth-backend.onrender.com/api/login/', {
+    fetch('https://voice-fingerprint-system.onrender.com/api/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
