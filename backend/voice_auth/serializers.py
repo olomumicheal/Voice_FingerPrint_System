@@ -1,32 +1,46 @@
 from rest_framework import serializers
-from .models import User, Voiceprint
+from django.contrib.auth import get_user_model
+from .models import Voiceprint
 
-class UserSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration.
+    It includes password and voice data fields for creation.
+    """
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    voice_data = serializers.CharField(required=True)
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
-
-class VoiceprintSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Voiceprint
-        fields = ('id', 'user', 'voice_data')
-
-class RegistrationSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
-    password = serializers.CharField(write_only=True)
-    email = serializers.EmailField()
-    voice_data = serializers.CharField()
+        fields = ('username', 'email', 'password', 'voice_data')
 
     def create(self, validated_data):
-        # This is where you would process the voice data and create the user and voiceprint
-        username = validated_data['username']
-        password = validated_data['password']
-        email = validated_data['email']
-        voice_data = validated_data['voice_data']
-
-        user = User.objects.create_user(username=username, password=password, email=email)
-        # Note: You will replace this part with your actual voiceprint creation logic
-        # For now, we are just saving the raw data.
-        Voiceprint.objects.create(user=user, voice_data=voice_data.encode())
+        """
+        Custom create method to handle user and voiceprint creation.
+        Note: This method is not used by the RegisterView I provided.
+        The view handles creation directly after validation.
+        This is here for completeness.
+        """
+        username = validated_data.pop('username')
+        password = validated_data.pop('password')
+        email = validated_data.pop('email')
+        voice_data = validated_data.pop('voice_data')
+        
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            **validated_data
+        )
+        Voiceprint.objects.create(user=user, data=voice_data)
         
         return user
+
+class UserLoginSerializer(serializers.Serializer):
+    """
+    Serializer for user login validation.
+    """
+    username = serializers.CharField(required=True)
+    voice_data = serializers.CharField(required=True)
