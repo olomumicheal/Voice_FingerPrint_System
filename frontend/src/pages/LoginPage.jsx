@@ -15,7 +15,7 @@ const LoginPage = () => {
     console.log("Attempting to log in with voice data:", voiceData);
     
     // For this temporary login logic, we are sending the username to the backend
-    fetch('http://127.0.0.1:8000/api/login/', {
+    fetch('https://voice-auth-backend.onrender.com/api/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
