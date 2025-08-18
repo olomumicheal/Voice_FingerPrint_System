@@ -17,7 +17,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-%@a-r31p6jjh#h*w(ggi+
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Add your Render URL to ALLOWED_HOSTS
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+# This line is corrected to handle hosts in a more robust way.
+if not DEBUG:
+    # For production, we get the hosts from an environment variable and allow the Render public hostname.
+    # The 'RENDER_EXTERNAL_HOSTNAME' is automatically provided by Render.
+    ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
+else:
+    # For local development, we use localhost and the local IP.
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
@@ -36,9 +43,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # Place CORS middleware here, at the very top.
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Add Whitenoise middleware for serving static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -46,13 +53,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS settings for your React frontend
-# Make sure to add the correct public URL of your Vercel frontend here.
+# Ensure CORS middleware is correctly placed after WhiteNoise for security
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5174",
     "http://127.0.0.1:5174",
     "https://voice-finger-print-system.vercel.app",
 ]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.onrender\.com$",
+]
+
 
 ROOT_URLCONF = 'voice_project.urls'
 
@@ -78,7 +88,10 @@ WSGI_APPLICATION = 'voice_project.wsgi.application'
 # Connect to Render's PostgreSQL database using the DATABASE_URL environment variable
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
-        'default': dj_database_url.config(default=os.environ['DATABASE_URL'])
+        'default': dj_database_url.config(
+            default=os.environ['DATABASE_URL'],
+            conn_max_age=600
+        )
     }
 else:
     # Use SQLite for local development
@@ -114,6 +127,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+
+# Set up static files for production
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
