@@ -38,7 +38,7 @@ const RegistrationPage = () => {
     };
     
     // Now send the combined data to the backend
-    fetch('https://voice-auth-backend.onrender.com/api/register/', {
+    fetch('https://voice-fingerprint-system.onrender.com/api/register/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
