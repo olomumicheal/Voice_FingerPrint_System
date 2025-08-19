@@ -91,8 +91,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # ✅ CORS setup
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # vite dev
-    "http://127.0.0.1:5173",
     "https://voice-finger-print-system.vercel.app",  # vercel frontend
 ]
 
